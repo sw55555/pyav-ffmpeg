@@ -1,7 +1,5 @@
 name: build-ffmpeg
-
 on: [push, pull_request]
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
