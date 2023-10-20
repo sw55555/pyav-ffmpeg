@@ -120,37 +120,37 @@ if not os.path.exists(output_tarball):
             name="unistring",
             source_url="https://ftp.gnu.org/gnu/libunistring/libunistring-1.1.tar.gz",
         ),
-        Package(
-            name="freetype",
-            requires=["png"],
-            source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.12.1.tar.gz",
-            # At this point we have not built our own harfbuzz and we do NOT want to
-            # pick up the system's harfbuzz.
-            build_arguments=["--with-harfbuzz=no"],
-        ),
-        Package(
-            name="fontconfig",
-            requires=["freetype", "xml2"],
-            source_url="https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.xz",
-            build_arguments=["--disable-nls", "--enable-libxml2"],
-        ),
-        Package(
-            name="fribidi",
-            source_url="https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz"
-        ),
-        Package(
-            name="harfbuzz",
-            requires=["freetype"],
-            source_url="https://github.com/harfbuzz/harfbuzz/releases/download/8.2.2/harfbuzz-8.2.2.tar.xz",
-            build_arguments=[
-                "--with-cairo=no",
-                "--with-chafa=no",
-                "--with-freetype=yes",
-                "--with-glib=no",
-            ],
-            # parallel build fails on Windows
-            build_parallel=platform.system() != "Windows",
-        ),
+        # Package(
+        #     name="freetype",
+        #     requires=["png"],
+        #     source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.12.1.tar.gz",
+        #     # At this point we have not built our own harfbuzz and we do NOT want to
+        #     # pick up the system's harfbuzz.
+        #     build_arguments=["--with-harfbuzz=no"],
+        # ),
+        # Package(
+        #     name="fontconfig",
+        #     requires=["freetype", "xml2"],
+        #     source_url="https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.xz",
+        #     build_arguments=["--disable-nls", "--enable-libxml2"],
+        # ),
+        # Package(
+        #     name="fribidi",
+        #     source_url="https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz"
+        # ),
+        # Package(
+        #     name="harfbuzz",
+        #     requires=["freetype"],
+        #     source_url="https://github.com/harfbuzz/harfbuzz/releases/download/8.2.2/harfbuzz-8.2.2.tar.xz",
+        #     build_arguments=[
+        #         "--with-cairo=no",
+        #         "--with-chafa=no",
+        #         "--with-freetype=yes",
+        #         "--with-glib=no",
+        #     ],
+        #     # parallel build fails on Windows
+        #     build_parallel=platform.system() != "Windows",
+        # ),
     ]
 
     if use_gnutls:
@@ -197,11 +197,11 @@ if not os.path.exists(output_tarball):
             ],
             build_parallel=False,
         ),
-        Package(
-            name="ass",
-            requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
-            source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
-        ),
+        # Package(
+        #     name="ass",
+        #     requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
+        #     source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
+        # ),
         Package(
             name="bluray",
             requires=["fontconfig"],
@@ -298,11 +298,12 @@ if not os.path.exists(output_tarball):
             name="ffmpeg",
             requires=[
                 "aom",
-                "ass",
+                #"fontconfig",  # libass transitory deps
+                #"xml2",
+                #"freetype",
+                #"ass",
                 "bluray",
                 "dav1d",
-                "fontconfig",
-                "freetype",
                 "gmp",
                 "lame",
                 "nasm",
@@ -316,7 +317,6 @@ if not os.path.exists(output_tarball):
                 "vpx",
                 "x264",
                 "x265",
-                "xml2",
                 "xvid",
                 "xz",
             ],
@@ -330,7 +330,8 @@ if not os.path.exists(output_tarball):
                 "--enable-gnutls" if use_gnutls else "--disable-gnutls",
                 "--enable-gpl",
                 "--enable-libaom",
-                "--enable-libass",
+                #"--enable-libass",
+                #"--enable-libxml2",
                 "--enable-libbluray",
                 "--enable-libdav1d",
                 "--enable-libfreetype",
@@ -347,7 +348,6 @@ if not os.path.exists(output_tarball):
                 "--enable-libx264",
                 "--enable-libx265",
                 "--enable-libxcb" if platform.system() == "Linux" else "--disable-libxcb",
-                "--enable-libxml2",
                 "--enable-libxvid",
                 "--enable-lzma",
                 "--enable-version3",
