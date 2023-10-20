@@ -205,7 +205,7 @@ if not os.path.exists(output_tarball):
         Package(
             name="bluray",
             requires=["fontconfig"],
-            source_url="https://download.videolan.org/pub/videolan/libbluray/1.1.2/libbluray-1.1.2.tar.bz2",
+            source_url="https://download.videolan.org/pub/videolan/libbluray/1.3.4/libbluray-1.3.4.tar.bz2",
             build_arguments=["--disable-bdjava-jar"],
         ),
         Package(
