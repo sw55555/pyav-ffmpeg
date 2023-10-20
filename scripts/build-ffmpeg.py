@@ -118,12 +118,12 @@ if not os.path.exists(output_tarball):
         ),
         Package(
             name="unistring",
-            source_url="https://ftp.gnu.org/gnu/libunistring/libunistring-0.9.10.tar.gz",
+            source_url="https://ftp.gnu.org/gnu/libunistring/libunistring-1.1.tar.gz",
         ),
         Package(
             name="freetype",
             requires=["png"],
-            source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz",
+            source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.12.1.tar.gz",
             # At this point we have not built our own harfbuzz and we do NOT want to
             # pick up the system's harfbuzz.
             build_arguments=["--with-harfbuzz=no"],
@@ -131,17 +131,17 @@ if not os.path.exists(output_tarball):
         Package(
             name="fontconfig",
             requires=["freetype", "xml2"],
-            source_url="https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.13.1.tar.bz2",
+            source_url="https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.xz",
             build_arguments=["--disable-nls", "--enable-libxml2"],
         ),
         Package(
             name="fribidi",
-            source_url="https://github.com/fribidi/fribidi/releases/download/v1.0.11/fribidi-1.0.11.tar.xz",
+            source_url="https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz"
         ),
         Package(
             name="harfbuzz",
             requires=["freetype"],
-            source_url="https://github.com/harfbuzz/harfbuzz/releases/download/4.1.0/harfbuzz-4.1.0.tar.xz",
+            source_url="https://github.com/harfbuzz/harfbuzz/releases/download/8.2.2/harfbuzz-8.2.2.tar.xz",
             build_arguments=[
                 "--with-cairo=no",
                 "--with-chafa=no",
@@ -200,7 +200,7 @@ if not os.path.exists(output_tarball):
         Package(
             name="ass",
             requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
-            source_url="https://github.com/libass/libass/releases/download/0.15.2/libass-0.15.2.tar.gz",
+            source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
         ),
         Package(
             name="bluray",
@@ -310,7 +310,7 @@ if not os.path.exists(output_tarball):
                 "openjpeg",
                 "opus",
                 "speex",
-                "theora",
+                #"theora",
                 "twolame",
                 "vorbis",
                 "vpx",
@@ -320,7 +320,7 @@ if not os.path.exists(output_tarball):
                 "xvid",
                 "xz",
             ],
-            source_url="https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.xz",
+            source_url="https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz",
             build_arguments=[
                 "--disable-alsa",
                 "--disable-doc",
@@ -346,9 +346,7 @@ if not os.path.exists(output_tarball):
                 "--enable-libvpx",
                 "--enable-libx264",
                 "--enable-libx265",
-                "--enable-libxcb"
-                if platform.system() == "Linux"
-                else "--disable-libxcb",
+                "--enable-libxcb" if platform.system() == "Linux" else "--disable-libxcb",
                 "--enable-libxml2",
                 "--enable-libxvid",
                 "--enable-lzma",
