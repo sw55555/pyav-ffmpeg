@@ -265,12 +265,12 @@ if not os.path.exists(output_tarball):
                 "--disable-unit-tests",
             ],
         ),
-        Package(
-            name="theora",
-            requires=["vorbis"],
-            source_url="http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.gz",
-            build_arguments=["--disable-examples", "--disable-spec"],
-        ),
+        # Package(
+        #     name="theora",
+        #     requires=["vorbis"],
+        #     source_url="http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.gz",
+        #     build_arguments=["--disable-examples", "--disable-spec"],
+        # ),
         Package(
             name="x264",
             source_url="https://code.videolan.org/videolan/x264/-/archive/master/x264-master.tar.bz2",
@@ -340,7 +340,7 @@ if not os.path.exists(output_tarball):
                 "--enable-libopenjpeg",
                 "--enable-libopus",
                 "--enable-libspeex",
-                "--enable-libtheora",
+                #"--enable-libtheora",
                 "--enable-libtwolame",
                 "--enable-libvorbis",
                 "--enable-libvpx",
