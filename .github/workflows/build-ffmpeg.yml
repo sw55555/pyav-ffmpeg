@@ -26,10 +26,10 @@ jobs:
       run:
         shell: ${{ matrix.shell }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.8
       - name: Install packages
         if: matrix.os == 'macos-latest'
         run: |
@@ -70,10 +70,10 @@ jobs:
     env:
       stage: 1
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.8
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Build FFmpeg dependencies
@@ -100,10 +100,10 @@ jobs:
     env:
       stage: 2
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.8
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - uses: actions/download-artifact@v2
@@ -135,10 +135,10 @@ jobs:
     env:
       stage: 3
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.8
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - uses: actions/download-artifact@v2

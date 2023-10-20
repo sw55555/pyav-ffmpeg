@@ -13,6 +13,13 @@ import time
 from dataclasses import dataclass, field, replace
 from typing import Dict, List
 
+def log_print(msg):
+    sys.stdout.write(msg + "\n")
+    sys.stdout.flush()
+
+def run(cmd, env=None):
+    log_print(f"- Running: {cmd}")
+    subprocess.run(cmd, check=True, env=env)
 
 def fetch(url, path):
     run(["curl", "-L", "-o", path, url])
@@ -73,11 +80,6 @@ def log_group(title):
         log_print(f"{start_color}{outcome}{end_color} {duration:.2f}s".rjust(78))
 
 
-def log_print(msg):
-    sys.stdout.write(msg + "\n")
-    sys.stdout.flush()
-
-
 def make_args(*, parallel: bool) -> List[str]:
     """
     Arguments for GNU make.
@@ -97,11 +99,6 @@ def prepend_env(env, name, new, separator=" "):
         env[name] = new + separator + old
     else:
         env[name] = new
-
-
-def run(cmd, env=None):
-    log_print(f"- Running: {cmd}")
-    subprocess.run(cmd, check=True, env=env)
 
 
 @dataclass
