@@ -11,21 +11,20 @@ import tarfile
 import tempfile
 import time
 from dataclasses import dataclass, field, replace
-from typing import Dict, List
 
-def log_print(msg):
+def log_print(msg: str) -> None:
     sys.stdout.write(msg + "\n")
     sys.stdout.flush()
 
-def run(cmd, env=None):
+def run(cmd: list[str], env=None) -> None:
     log_print(f"- Running: {cmd}")
     subprocess.run(cmd, check=True, env=env)
 
-def fetch(url, path):
+def fetch(url: str, path: str) -> None:
     run(["curl", "-L", "-o", path, url])
 
 
-def get_platform():
+def get_platform() -> str:
     """
     Get the current platform tag.
     """
@@ -61,7 +60,7 @@ def chdir(path):
 
 
 @contextlib.contextmanager
-def log_group(title):
+def log_group(title: str):
     """
     Starts a log group and ends it at exit.
     """
@@ -80,14 +79,14 @@ def log_group(title):
         log_print(f"{start_color}{outcome}{end_color} {duration:.2f}s".rjust(78))
 
 
-def make_args(*, parallel: bool) -> List[str]:
+def make_args(*, parallel: bool) -> list[str]:
     """
     Arguments for GNU make.
     """
     args = []
 
     # do not parallelize build when running in qemu
-    if parallel and platform.machine() not in ["aarch64", "ppc64le", "s390x"]:
+    if parallel and platform.machine() not in ("aarch64", "ppc64le", "s390x"):
         args.append("-j")
 
     return args
@@ -106,10 +105,10 @@ class Package:
     name: str
     source_url: str
     build_system: str = "autoconf"
-    build_arguments: List[str] = field(default_factory=list)
+    build_arguments: list[str] = field(default_factory=list)
     build_dir: str = "build"
     build_parallel: bool = True
-    requires: List[str] = field(default_factory=list)
+    requires: list[str] = field(default_factory=list)
     source_dir: str = ""
     source_filename: str = ""
     source_strip_components: int = 1
@@ -154,14 +153,14 @@ class Builder:
         if platform.system() == "Darwin":
             log_print("Environment variables")
             for var in ("ARCHFLAGS", "MACOSX_DEPLOYMENT_TARGET"):
-                log_print(" - %s: %s" % (var, os.environ[var]))
+                log_print(f" - {var}: {os.environ[var]}")
 
         # delete build directory
         if os.path.exists(self.build_dir):
             shutil.rmtree(self.build_dir)
 
         # create directories
-        for d in [self.build_dir, self.source_dir]:
+        for d in (self.build_dir, self.source_dir):
             os.makedirs(d, exist_ok=True)
 
         # add tools to PATH
@@ -430,7 +429,7 @@ endian = 'little'
         if os.path.exists(patch):
             run(["patch", "-d", path, "-i", patch, "-p1"])
 
-    def _environment(self, *, for_builder: bool) -> Dict[str, str]:
+    def _environment(self, *, for_builder: bool) -> dict[str, str]:
         env = os.environ.copy()
 
         prefix = self._prefix(for_builder=for_builder)

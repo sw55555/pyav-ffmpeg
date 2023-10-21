@@ -1,42 +1,34 @@
-import glob
 import os
 import platform
 import shutil
 import subprocess
 import sys
 
+from glob import glob
+
 from cibuildpkg import Builder, Package, get_platform, log_group, run
 
 if len(sys.argv) < 2:
-    sys.stderr.write("Usage: build-ffmpeg.py <prefix> [stage]\n")
-    sys.stderr.write(
-        "       AArch64 build requires stage and possible values can be 1, 2 or 3\n"
-    )
     sys.exit(1)
 
 dest_dir = sys.argv[1]
 output_dir = os.path.abspath("output")
-system = platform.system()
-if system == "Linux" and os.environ.get("CIBUILDWHEEL") == "1":
+
+plat = platform.system()
+
+if plat == "Linux" and os.environ.get("CIBUILDWHEEL") == "1":
     output_dir = "/output"
 output_tarball = os.path.join(output_dir, f"ffmpeg-{get_platform()}.tar.gz")
 
 # FFmpeg has native TLS backends for macOS and Windows
-use_gnutls = system == "Linux"
+use_gnutls = plat == "Linux"
 
 if not os.path.exists(output_tarball):
     builder = Builder(dest_dir=dest_dir)
     builder.create_directories()
 
-    if len(sys.argv) == 3:
-        build_stage = int(sys.argv[2]) - 1
-    else:
-        build_stage = None
-
-    # install packages
-
     available_tools = set()
-    if system == "Linux" and os.environ.get("CIBUILDWHEEL") == "1":
+    if plat == "Linux" and os.environ.get("CIBUILDWHEEL") == "1":
         with log_group("install packages"):
             run(
                 [
@@ -50,7 +42,7 @@ if not os.path.exists(output_tarball):
                 ]
             )
         available_tools.update(["gperf"])
-    elif system == "Windows":
+    elif plat == "Windows":
         available_tools.update(["gperf", "nasm"])
 
         # print tool locations
@@ -81,9 +73,7 @@ if not os.path.exists(output_tarball):
         )
 
     # build packages
-    package_groups = [[], [], []]
-    package_groups[0] = [
-        # libraries
+    package_groups = [
         Package(
             name="xz",
             source_url="https://tukaani.org/xz/xz-5.2.5.tar.bz2",
@@ -110,17 +100,14 @@ if not os.path.exists(output_tarball):
             # avoid an assembler error on Windows
             build_arguments=["PNG_COPTS=-fno-asynchronous-unwind-tables"],
         ),
-        Package(
-            name="xml2",
-            requires=["xz"],
-            source_url="https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.13.tar.xz",
-            build_arguments=["--without-python"],
-        ),
-        Package(
-            name="unistring",
-            source_url="https://ftp.gnu.org/gnu/libunistring/libunistring-1.1.tar.gz",
-        ),
         # Package(
+        #     name="xml2",
+        #     requires=["xz"],
+        #     source_url="https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.13.tar.xz",
+        #     build_arguments=["--without-python"],
+        # ),
+        # Package(
+        #     # Can't be built with arm64 macos
         #     name="freetype",
         #     requires=["png"],
         #     source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.12.1.tar.gz",
@@ -149,12 +136,16 @@ if not os.path.exists(output_tarball):
         #         "--with-glib=no",
         #     ],
         #     # parallel build fails on Windows
-        #     build_parallel=platform.system() != "Windows",
+        #     build_parallel=plat != "Windows",
         # ),
     ]
 
     if use_gnutls:
-        package_groups[0] += [
+        package_groups += [
+            Package(
+                name="unistring",
+                source_url="https://ftp.gnu.org/gnu/libunistring/libunistring-1.1.tar.gz",
+            ),
             Package(
                 name="nettle",
                 requires=["gmp"],
@@ -181,7 +172,7 @@ if not os.path.exists(output_tarball):
             ),
         ]
 
-    package_groups[1] = [
+    package_groups += [
         # codecs
         Package(
             name="aom",
@@ -198,15 +189,15 @@ if not os.path.exists(output_tarball):
             build_parallel=False,
         ),
         # Package(
-        #     name="ass",
-        #     requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
-        #     source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
-        # ),
-        # Package(
         #     name="bluray",
         #     requires=["fontconfig"],
         #     source_url="https://download.videolan.org/pub/videolan/libbluray/1.3.4/libbluray-1.3.4.tar.bz2",
         #     build_arguments=["--disable-bdjava-jar"],
+        # ),
+        # Package(
+        #     name="ass",
+        #     requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
+        #     source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
         # ),
         Package(
             name="dav1d",
@@ -225,8 +216,7 @@ if not os.path.exists(output_tarball):
         Package(
             name="opencore-amr",
             source_url="http://deb.debian.org/debian/pool/main/o/opencore-amr/opencore-amr_0.1.5.orig.tar.gz",
-            # parallel build hangs on Windows
-            build_parallel=platform.system() != "Windows",
+            build_parallel=plat != "Windows",
         ),
         Package(
             name="openjpeg",
@@ -275,7 +265,7 @@ if not os.path.exists(output_tarball):
             name="x264",
             source_url="https://code.videolan.org/videolan/x264/-/archive/master/x264-master.tar.bz2",
             # parallel build runs out of memory on Windows
-            build_parallel=platform.system() != "Windows",
+            build_parallel=plat != "Windows",
         ),
         Package(
             name="x265",
@@ -291,14 +281,11 @@ if not os.path.exists(output_tarball):
             source_dir="build/generic",
             build_dir="build/generic",
         ),
-    ]
-    package_groups[2] = [
-        # ffmpeg
         Package(
             name="ffmpeg",
             requires=[
                 "aom",
-                #"fontconfig",  # libass transitory deps
+                #"fontconfig",
                 #"xml2",
                 #"freetype",
                 #"ass",
@@ -331,9 +318,9 @@ if not os.path.exists(output_tarball):
                 "--enable-libaom",
                 #"--enable-libfreetype",
                 #"--enable-fontconfig",
-                #"--enable-libass",
                 #"--enable-libxml2",
                 #"--enable-libbluray",
+                #"--enable-libass",
                 "--enable-libdav1d",
                 "--enable-libmp3lame",
                 "--enable-libopencore-amrnb",
@@ -347,7 +334,7 @@ if not os.path.exists(output_tarball):
                 "--enable-libvpx",
                 "--enable-libx264",
                 "--enable-libx265",
-                "--enable-libxcb" if platform.system() == "Linux" else "--disable-libxcb",
+                "--enable-libxcb" if plat == "Linux" else "--disable-libxcb",
                 "--enable-libxvid",
                 "--enable-lzma",
                 "--enable-version3",
@@ -356,17 +343,12 @@ if not os.path.exists(output_tarball):
         ),
     ]
 
-    if build_stage is not None:
-        packages = package_groups[build_stage]
-    else:
-        packages = [p for p_list in package_groups for p in p_list]
-
-    for package in packages:
+    for package in package_groups:
         builder.build(package)
 
-    if system == "Windows":
+    if plat == "Windows":
         # fix .lib files being installed in the wrong directory
-        for name in [
+        for name in (
             "avcodec",
             "avdevice",
             "avfilter",
@@ -375,7 +357,7 @@ if not os.path.exists(output_tarball):
             "postproc",
             "swresample",
             "swscale",
-        ]:
+        ):
             shutil.move(
                 os.path.join(dest_dir, "bin", name + ".lib"),
                 os.path.join(dest_dir, "lib"),
@@ -388,31 +370,29 @@ if not os.path.exists(output_tarball):
             .splitlines()[0]
             .strip()
         )
-        for name in [
+        for name in (
             "libgcc_s_seh-1.dll",
             "libiconv-2.dll",
             "libstdc++-6.dll",
             "libwinpthread-1.dll",
             "zlib1.dll",
-        ]:
+        ):
             shutil.copy(os.path.join(mingw_bindir, name), os.path.join(dest_dir, "bin"))
 
     # find libraries
-    if system == "Darwin":
-        libraries = glob.glob(os.path.join(dest_dir, "lib", "*.dylib"))
-    elif system == "Linux":
-        libraries = glob.glob(os.path.join(dest_dir, "lib", "*.so"))
-    elif system == "Windows":
-        libraries = glob.glob(os.path.join(dest_dir, "bin", "*.dll"))
+    if plat == "Darwin":
+        libraries = glob(os.path.join(dest_dir, "lib", "*.dylib"))
+    elif plat == "Linux":
+        libraries = glob(os.path.join(dest_dir, "lib", "*.so"))
+    elif plat == "Windows":
+        libraries = glob(os.path.join(dest_dir, "bin", "*.dll"))
 
     # strip libraries
-    if system == "Darwin":
+    if plat == "Darwin":
         run(["strip", "-S"] + libraries)
         run(["otool", "-L"] + libraries)
     else:
         run(["strip", "-s"] + libraries)
 
-    # build output tarball
-    if build_stage is None or build_stage == 2:
-        os.makedirs(output_dir, exist_ok=True)
-        run(["tar", "czvf", output_tarball, "-C", dest_dir, "bin", "include", "lib"])
+    os.makedirs(output_dir, exist_ok=True)
+    run(["tar", "czvf", output_tarball, "-C", dest_dir, "bin", "include", "lib"])
