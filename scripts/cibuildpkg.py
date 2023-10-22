@@ -108,10 +108,12 @@ class Package:
     build_arguments: list[str] = field(default_factory=list)
     build_dir: str = "build"
     build_parallel: bool = True
-    requires: list[str] = field(default_factory=list)
+    requires: list[str] = field(default_factory=list)  # for docs only
+    fflags: str = ""
     source_dir: str = ""
     source_filename: str = ""
     source_strip_components: int = 1
+    gpl: bool = False  # As opposed to the LGPL or other license.
 
 
 class Builder:

@@ -52,8 +52,6 @@ if not os.path.exists(output_tarball):
     with log_group("install python packages"):
         run(["pip", "install", "cmake", "meson", "ninja"])
 
-    # build tools
-
     if "gperf" not in available_tools:
         builder.build(
             Package(
@@ -89,12 +87,6 @@ if not os.path.exists(output_tarball):
             ],
         ),
         Package(
-            name="gmp",
-            source_url="https://auto-editor.com/gmp-6.2.1.tar.xz",
-            # out-of-tree builds fail on Windows
-            build_dir=".",
-        ),
-        Package(
             name="png",
             source_url="http://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng1.6_1.6.37.orig.tar.gz",
             # avoid an assembler error on Windows
@@ -105,6 +97,7 @@ if not os.path.exists(output_tarball):
         #     requires=["xz"],
         #     source_url="https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.13.tar.xz",
         #     build_arguments=["--without-python"],
+        #     fflags="--enable-libxml2",
         # ),
         # Package(
         #     # Can't be built with arm64 macos
@@ -114,12 +107,14 @@ if not os.path.exists(output_tarball):
         #     # At this point we have not built our own harfbuzz and we do NOT want to
         #     # pick up the system's harfbuzz.
         #     build_arguments=["--with-harfbuzz=no"],
+        #     fflags="--enable-libfreetype",
         # ),
         # Package(
         #     name="fontconfig",
         #     requires=["freetype", "xml2"],
         #     source_url="https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.xz",
         #     build_arguments=["--disable-nls", "--enable-libxml2"],
+        #     fflags="--enable-fontconfig",
         # ),
         # Package(
         #     name="fribidi",
@@ -145,6 +140,13 @@ if not os.path.exists(output_tarball):
             Package(
                 name="unistring",
                 source_url="https://ftp.gnu.org/gnu/libunistring/libunistring-1.1.tar.gz",
+            ),
+            Package(
+                name="gmp",
+                source_url="https://auto-editor.com/gmp-6.2.1.tar.xz",
+                # out-of-tree builds fail on Windows
+                build_dir=".",
+                fflags="--enable-gmp",
             ),
             Package(
                 name="nettle",
@@ -187,27 +189,32 @@ if not os.path.exists(output_tarball):
                 "-DENABLE_TOOLS=0",
             ],
             build_parallel=False,
+            fflags="--enable-libaom",
         ),
         # Package(
         #     name="bluray",
         #     requires=["fontconfig"],
         #     source_url="https://download.videolan.org/pub/videolan/libbluray/1.3.4/libbluray-1.3.4.tar.bz2",
         #     build_arguments=["--disable-bdjava-jar"],
+        #     fflags="--enable-libbluray",
         # ),
         # Package(
         #     name="ass",
         #     requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
         #     source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
+        #     fflags="--enable-libass",
         # ),
         Package(
             name="dav1d",
             requires=["meson", "nasm", "ninja"],
             source_url="https://code.videolan.org/videolan/dav1d/-/archive/0.9.2/dav1d-0.9.2.tar.bz2",
             build_system="meson",
+            fflags="--enable-libdav1d",
         ),
         Package(
             name="lame",
             source_url="http://deb.debian.org/debian/pool/main/l/lame/lame_3.100.orig.tar.gz",
+            fflags="--enable-libmp3lame",
         ),
         Package(
             name="ogg",
@@ -224,26 +231,31 @@ if not os.path.exists(output_tarball):
             source_filename="openjpeg-2.4.0.tar.gz",
             source_url="https://github.com/uclouvain/openjpeg/archive/v2.4.0.tar.gz",
             build_system="cmake",
+            fflags="--enable-libopenjpeg",
         ),
         Package(
             name="opus",
             source_url="https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz",
             build_arguments=["--disable-doc", "--disable-extra-programs"],
+            fflags="--enable-libopus",
         ),
         Package(
             name="speex",
-            source_url="http://downloads.xiph.org/releases/speex/speex-1.2.0.tar.gz",
+            source_url="http://downloads.xiph.org/releases/speex/speex-1.2.1.tar.gz",
             build_arguments=["--disable-binaries"],
+            fflags="--enable-libspeex",
         ),
         Package(
             name="twolame",
             source_url="http://deb.debian.org/debian/pool/main/t/twolame/twolame_0.4.0.orig.tar.gz",
             build_arguments=["--disable-sndfile"],
+            fflags="--enable-libtwolame",
         ),
         Package(
             name="vorbis",
             requires=["ogg"],
             source_url="http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz",
+            fflags="--enable-libvorbis",
         ),
         Package(
             name="vpx",
@@ -254,18 +266,22 @@ if not os.path.exists(output_tarball):
                 "--disable-tools",
                 "--disable-unit-tests",
             ],
+            fflags="--enable-libvpx",
         ),
         # Package(
         #     name="theora",
         #     requires=["vorbis"],
         #     source_url="http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.gz",
         #     build_arguments=["--disable-examples", "--disable-spec"],
+        #     fflags="--enable-libtheora",
         # ),
         Package(
             name="x264",
             source_url="https://code.videolan.org/videolan/x264/-/archive/master/x264-master.tar.bz2",
             # parallel build runs out of memory on Windows
             build_parallel=plat != "Windows",
+            fflags="--enable-libx264",
+            gpl=True,
         ),
         Package(
             name="x265",
@@ -273,6 +289,8 @@ if not os.path.exists(output_tarball):
             source_url="https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.5.tar.gz",
             build_system="cmake",
             source_dir="source",
+            fflags="--enable-libx265",
+            gpl=True,
         ),
         Package(
             name="xvid",
@@ -280,71 +298,40 @@ if not os.path.exists(output_tarball):
             source_url="https://downloads.xvid.com/downloads/xvidcore-1.3.7.tar.gz",
             source_dir="build/generic",
             build_dir="build/generic",
-        ),
-        Package(
-            name="ffmpeg",
-            requires=[
-                "aom",
-                #"fontconfig",
-                #"xml2",
-                #"freetype",
-                #"ass",
-                #"bluray",
-                "dav1d",
-                "gmp",
-                "lame",
-                "nasm",
-                "opencore-amr",
-                "openjpeg",
-                "opus",
-                "speex",
-                #"theora",
-                "twolame",
-                "vorbis",
-                "vpx",
-                "x264",
-                "x265",
-                "xvid",
-                "xz",
-            ],
-            source_url="https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz",
-            build_arguments=[
-                "--disable-alsa",
-                "--disable-doc",
-                "--disable-mediafoundation",
-                "--enable-gmp",
-                "--enable-gnutls" if use_gnutls else "--disable-gnutls",
-                "--enable-gpl",
-                "--enable-libaom",
-                #"--enable-libfreetype",
-                #"--enable-fontconfig",
-                #"--enable-libxml2",
-                #"--enable-libbluray",
-                #"--enable-libass",
-                "--enable-libdav1d",
-                "--enable-libmp3lame",
-                "--enable-libopencore-amrnb",
-                "--enable-libopencore-amrwb",
-                "--enable-libopenjpeg",
-                "--enable-libopus",
-                "--enable-libspeex",
-                #"--enable-libtheora",
-                "--enable-libtwolame",
-                "--enable-libvorbis",
-                "--enable-libvpx",
-                "--enable-libx264",
-                "--enable-libx265",
-                "--enable-libxcb" if plat == "Linux" else "--disable-libxcb",
-                "--enable-libxvid",
-                "--enable-lzma",
-                "--enable-version3",
-                "--enable-zlib",
-            ],
+            fflags="--enable-libxvid",
+            gpl=True,
         ),
     ]
 
     for package in package_groups:
         builder.build(package)
+
+    ffmpeg_build_args = [
+        "--disable-alsa",
+        "--disable-doc",
+        "--disable-mediafoundation",
+        "--enable-gnutls" if use_gnutls else "--disable-gnutls",
+        "--enable-gpl",
+        "--enable-version3",
+
+        "--enable-libopencore-amrnb",
+        "--enable-libopencore-amrwb",
+        "--enable-libxcb" if plat == "Linux" else "--disable-libxcb",
+        "--enable-lzma",
+        "--enable-zlib",
+    ]
+
+    for package in package_groups:
+        if package.fflags != "":
+            ffmpeg_build_args.append(package.fflags)
+
+    builder.build(
+        Package(
+            name="ffmpeg",
+            source_url="https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz",
+            build_arguments=ffmpeg_build_args,
+        )
+    )
 
     if plat == "Windows":
         # fix .lib files being installed in the wrong directory
