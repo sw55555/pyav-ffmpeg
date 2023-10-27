@@ -143,7 +143,7 @@ if not os.path.exists(output_tarball):
             ),
             Package(
                 name="gmp",
-                source_url="https://auto-editor.com/gmp-6.2.1.tar.xz",
+                source_url="https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
                 # out-of-tree builds fail on Windows
                 build_dir=".",
                 fflags="--enable-gmp",
@@ -151,7 +151,7 @@ if not os.path.exists(output_tarball):
             Package(
                 name="nettle",
                 requires=["gmp"],
-                source_url="https://ftp.gnu.org/gnu/nettle/nettle-3.7.3.tar.gz",
+                source_url="https://ftp.gnu.org/gnu/nettle/nettle-3.9.1.tar.gz",
                 build_arguments=["--disable-documentation"],
                 # build randomly fails with "*** missing separator.  Stop."
                 build_parallel=False,
@@ -159,7 +159,7 @@ if not os.path.exists(output_tarball):
             Package(
                 name="gnutls",
                 requires=["nettle", "unistring"],
-                source_url="https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.3.tar.xz",
+                source_url="https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.1.tar.xz",
                 build_arguments=[
                     "--disable-cxx",
                     "--disable-doc",
@@ -259,8 +259,8 @@ if not os.path.exists(output_tarball):
         ),
         Package(
             name="vpx",
-            source_filename="vpx-1.11.0.tar.gz",
-            source_url="https://github.com/webmproject/libvpx/archive/v1.11.0.tar.gz",
+            source_filename="vpx-1.13.1.tar.gz",
+            source_url="https://github.com/webmproject/libvpx/archive/v1.13.1.tar.gz",
             build_arguments=[
                 "--disable-examples",
                 "--disable-tools",
