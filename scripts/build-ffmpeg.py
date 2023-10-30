@@ -251,23 +251,23 @@ if not os.path.exists(output_tarball):
             build_arguments=["--disable-sndfile"],
             fflags="--enable-libtwolame",
         ),
-        Package(
-            name="vorbis",
-            requires=["ogg"],
-            source_url="http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz",
-            fflags="--enable-libvorbis",
-        ),
-        Package(
-            name="vpx",
-            source_filename="vpx-1.13.1.tar.gz",
-            source_url="https://github.com/webmproject/libvpx/archive/v1.13.1.tar.gz",
-            build_arguments=[
-                "--disable-examples",
-                "--disable-tools",
-                "--disable-unit-tests",
-            ],
-            fflags="--enable-libvpx",
-        ),
+        # Package(
+        #     name="vorbis",
+        #     requires=["ogg"],
+        #     source_url="http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz",
+        #     fflags="--enable-libvorbis",
+        # ),
+        # Package(
+        #     name="vpx",
+        #     source_filename="vpx-1.13.1.tar.gz",
+        #     source_url="https://github.com/webmproject/libvpx/archive/v1.13.1.tar.gz",
+        #     build_arguments=[
+        #         "--disable-examples",
+        #         "--disable-tools",
+        #         "--disable-unit-tests",
+        #     ],
+        #     fflags="--enable-libvpx",
+        # ),
         # Package(
         #     name="theora",
         #     requires=["vorbis"],
@@ -330,6 +330,7 @@ if not os.path.exists(output_tarball):
             name="ffmpeg",
             source_url="https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz",
             build_arguments=ffmpeg_build_args,
+            build_parallel=plat != "Windows",
         )
     )
 
