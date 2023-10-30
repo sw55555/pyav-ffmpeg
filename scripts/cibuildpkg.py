@@ -100,7 +100,7 @@ def prepend_env(env, name, new, separator=" "):
         env[name] = new
 
 
-@dataclass
+@dataclass(slots=True, frozen=True)
 class Package:
     name: str
     source_url: str
