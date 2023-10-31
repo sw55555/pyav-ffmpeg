@@ -10,15 +10,19 @@ import sys
 import tarfile
 import tempfile
 import time
+from collections.abc import Iterator
 from dataclasses import dataclass, field, replace
+
 
 def log_print(msg: str) -> None:
     sys.stdout.write(msg + "\n")
     sys.stdout.flush()
 
-def run(cmd: list[str], env=None) -> None:
+
+def run(cmd: list[str], env: dict[str, str] | None = None) -> None:
     log_print(f"- Running: {cmd}")
     subprocess.run(cmd, check=True, env=env)
+
 
 def fetch(url: str, path: str) -> None:
     run(["curl", "-L", "-o", path, url])
@@ -47,7 +51,7 @@ def get_platform() -> str:
 
 
 @contextlib.contextmanager
-def chdir(path):
+def chdir(path: str) -> Iterator[None]:
     """
     Changes to a directory and returns to the original directory at exit.
     """
@@ -60,7 +64,7 @@ def chdir(path):
 
 
 @contextlib.contextmanager
-def log_group(title: str):
+def log_group(title: str) -> Iterator[None]:
     """
     Starts a log group and ends it at exit.
     """
@@ -92,7 +96,7 @@ def make_args(*, parallel: bool) -> list[str]:
     return args
 
 
-def prepend_env(env, name, new, separator=" "):
+def prepend_env(env: dict[str, str], name: str, new: str, separator: str = " ") -> None:
     old = env.get(name)
     if old:
         env[name] = new + separator + old
@@ -100,7 +104,7 @@ def prepend_env(env, name, new, separator=" "):
         env[name] = new
 
 
-@dataclass(slots=True, frozen=True)
+@dataclass(slots=True)
 class Package:
     name: str
     source_url: str
@@ -117,7 +121,7 @@ class Package:
 
 
 class Builder:
-    def __init__(self, dest_dir: str) -> None:
+    def __init__(self, dest_dir: str):
         self._builder_dest_dir = dest_dir + ".builder"
         self._target_dest_dir = dest_dir
 
@@ -125,7 +129,7 @@ class Builder:
         self.patch_dir = os.path.abspath("patches")
         self.source_dir = os.path.abspath("source")
 
-    def build(self, package: Package, *, for_builder: bool = False):
+    def build(self, package: Package, *, for_builder: bool = False) -> None:
         # if the package is already installed, do nothing
         installed_dir = os.path.join(
             self._prefix(for_builder=for_builder), "var", "lib", "cibuildpkg"
@@ -150,7 +154,7 @@ class Builder:
         with open(installed_file, "w") as fp:
             fp.write("installed\n")
 
-    def create_directories(self):
+    def create_directories(self) -> None:
         # print debugging information
         if platform.system() == "Darwin":
             log_print("Environment variables")
@@ -452,12 +456,12 @@ endian = 'little'
             arch_flags = os.environ["ARCHFLAGS"]
             if arch_flags == "-arch arm64":
                 prepend_env(env, "ASFLAGS", arch_flags)
-            for var in ["CFLAGS", "CXXFLAGS", "LDFLAGS"]:
+            for var in ("CFLAGS", "CXXFLAGS", "LDFLAGS"):
                 prepend_env(env, var, arch_flags)
 
         return env
 
-    def _mangle_path(self, path):
+    def _mangle_path(self, path: str) -> str:
         if platform.system() == "Windows":
             return (
                 path.replace(os.path.sep, "/").replace("C:", "/c").replace("D:", "/d")

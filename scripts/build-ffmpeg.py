@@ -3,7 +3,6 @@ import platform
 import shutil
 import subprocess
 import sys
-
 from glob import glob
 
 from cibuildpkg import Builder, Package, get_platform, log_group, run
@@ -251,23 +250,23 @@ if not os.path.exists(output_tarball):
             build_arguments=["--disable-sndfile"],
             fflags="--enable-libtwolame",
         ),
-        # Package(
-        #     name="vorbis",
-        #     requires=["ogg"],
-        #     source_url="http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz",
-        #     fflags="--enable-libvorbis",
-        # ),
-        # Package(
-        #     name="vpx",
-        #     source_filename="vpx-1.13.1.tar.gz",
-        #     source_url="https://github.com/webmproject/libvpx/archive/v1.13.1.tar.gz",
-        #     build_arguments=[
-        #         "--disable-examples",
-        #         "--disable-tools",
-        #         "--disable-unit-tests",
-        #     ],
-        #     fflags="--enable-libvpx",
-        # ),
+        Package(
+            name="vorbis",
+            requires=["ogg"],
+            source_url="http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz",
+            fflags="--enable-libvorbis",
+        ),
+        Package(
+            name="vpx",
+            source_filename="vpx-1.13.1.tar.gz",
+            source_url="https://github.com/webmproject/libvpx/archive/v1.13.1.tar.gz",
+            build_arguments=[
+                "--disable-examples",
+                "--disable-tools",
+                "--disable-unit-tests",
+            ],
+            fflags="--enable-libvpx",
+        ),
         # Package(
         #     name="theora",
         #     requires=["vorbis"],
@@ -283,15 +282,15 @@ if not os.path.exists(output_tarball):
             fflags="--enable-libx264",
             gpl=True,
         ),
-        # Package(
-        #     name="x265",
-        #     requires=["cmake"],
-        #     source_url="https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.5.tar.gz",
-        #     build_system="cmake",
-        #     source_dir="source",
-        #     fflags="--enable-libx265",
-        #     gpl=True,
-        # ),
+        Package(
+            name="x265",
+            requires=["cmake"],
+            source_url="https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.5.tar.gz",
+            build_system="cmake",
+            source_dir="source",
+            fflags="--enable-libx265",
+            gpl=True,
+        ),
         # Package(
         #     name="xvid",
         #     requires=["nasm"],
@@ -313,9 +312,8 @@ if not os.path.exists(output_tarball):
         "--enable-gnutls" if use_gnutls else "--disable-gnutls",
         "--enable-gpl",
         "--enable-version3",
-
-        #"--enable-libopencore-amrnb",
-        #"--enable-libopencore-amrwb",
+        # "--enable-libopencore-amrnb",
+        # "--enable-libopencore-amrwb",
         "--enable-libxcb" if plat == "Linux" else "--disable-libxcb",
         "--enable-lzma",
         "--enable-zlib",
@@ -330,7 +328,6 @@ if not os.path.exists(output_tarball):
             name="ffmpeg",
             source_url="https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz",
             build_arguments=ffmpeg_build_args,
-            build_parallel=plat != "Windows",
         )
     )
 
