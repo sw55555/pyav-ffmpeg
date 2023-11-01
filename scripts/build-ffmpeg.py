@@ -1,3 +1,4 @@
+import argparse
 import os
 import platform
 import shutil
@@ -7,10 +8,12 @@ from glob import glob
 
 from cibuildpkg import Builder, Package, get_platform, log_group, run
 
-if len(sys.argv) < 2:
-    sys.exit(1)
+parser = argparse.ArgumentParser("build-ffmpeg")
+parser.add_argument("destination")
+parser.add_argument("--disable-gpl", action="store_true")
+args = parser.parse_args()
 
-dest_dir = sys.argv[1]
+dest_dir = args.destination
 output_dir = os.path.abspath("output")
 
 plat = platform.system()
@@ -291,37 +294,50 @@ if not os.path.exists(output_tarball):
             fflags="--enable-libx265",
             gpl=True,
         ),
-        # Package(
-        #     name="xvid",
-        #     requires=["nasm"],
-        #     source_url="https://downloads.xvid.com/downloads/xvidcore-1.3.7.tar.gz",
-        #     source_dir="build/generic",
-        #     build_dir="build/generic",
-        #     fflags="--enable-libxvid",
-        #     gpl=True,
-        # ),
+        Package(
+            name="xvid",
+            requires=["nasm"],
+            source_url="https://downloads.xvid.com/downloads/xvidcore-1.3.7.tar.gz",
+            source_dir="build/generic",
+            build_dir="build/generic",
+            fflags="--enable-libxvid",
+            gpl=True,
+        ),
     ]
 
-    for package in package_groups:
-        builder.build(package)
+    # Permissive h264 encoder/decoder
+    openh264 = Package(
+        name="openh264",
+        requires=["meson", "nasm", "ninja"],
+        source_filename="openh264-2.3.1.tar.gz",
+        source_url="https://github.com/cisco/openh264/archive/refs/tags/v2.3.1.tar.gz",
+        build_system="meson",
+    )
 
     ffmpeg_build_args = [
         "--disable-alsa",
         "--disable-doc",
         "--disable-mediafoundation",
         "--enable-gnutls" if use_gnutls else "--disable-gnutls",
-        "--enable-gpl",
-        "--enable-version3",
         # "--enable-libopencore-amrnb",
         # "--enable-libopencore-amrwb",
         "--enable-libxcb" if plat == "Linux" else "--disable-libxcb",
         "--enable-lzma",
         "--enable-zlib",
+        "--enable-version3",
     ]
 
+    if not args.disable_gpl:
+        ffmpeg_build_args.append("--enable-gpl")
+
     for package in package_groups:
-        if package.fflags != "":
-            ffmpeg_build_args.append(package.fflags)
+        if package.name == "x264" and args.disable_gpl:
+            builder.build(openh264)
+            ffmpeg_build_args.append("--enable-openh264")
+        elif not (package.gpl and args.disable_gpl):
+            builder.build(package)
+            if package.fflags != "":
+                ffmpeg_build_args.append(package.fflags)
 
     builder.build(
         Package(
