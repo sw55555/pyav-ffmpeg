@@ -270,13 +270,6 @@ if not os.path.exists(output_tarball):
             ],
             fflags="--enable-libvpx",
         ),
-        # Package(
-        #     name="theora",
-        #     requires=["vorbis"],
-        #     source_url="http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.gz",
-        #     build_arguments=["--disable-examples", "--disable-spec"],
-        #     fflags="--enable-libtheora",
-        # ),
         Package(
             name="x264",
             source_url="https://code.videolan.org/videolan/x264/-/archive/master/x264-master.tar.bz2",
@@ -305,12 +298,11 @@ if not os.path.exists(output_tarball):
         ),
     ]
 
-    # Permissive h264 encoder/decoder
     openh264 = Package(
         name="openh264",
         requires=["meson", "nasm", "ninja"],
-        source_filename="openh264-2.3.1.tar.gz",
-        source_url="https://github.com/cisco/openh264/archive/refs/tags/v2.3.1.tar.gz",
+        source_filename="openh264-2.2.0.tar.gz",
+        source_url="https://github.com/cisco/openh264/archive/refs/tags/v2.2.0.tar.gz",
         build_system="meson",
     )
 
@@ -318,9 +310,9 @@ if not os.path.exists(output_tarball):
         "--disable-alsa",
         "--disable-doc",
         "--disable-mediafoundation",
+        "--disable-videotoolbox",
+        "--disable-libtheora",
         "--enable-gnutls" if use_gnutls else "--disable-gnutls",
-        # "--enable-libopencore-amrnb",
-        # "--enable-libopencore-amrwb",
         "--enable-libxcb" if plat == "Linux" else "--disable-libxcb",
         "--enable-lzma",
         "--enable-zlib",
@@ -342,7 +334,7 @@ if not os.path.exists(output_tarball):
     builder.build(
         Package(
             name="ffmpeg",
-            source_url="https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz",
+            source_url="https://ffmpeg.org/releases/ffmpeg-6.1.tar.xz",
             build_arguments=ffmpeg_build_args,
         )
     )
