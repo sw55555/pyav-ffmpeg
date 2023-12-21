@@ -139,7 +139,6 @@ class Builder:
             return
 
         with log_group(f"build {package.name}"):
-            self._extract(package)
             if package.name == "x265":
                 self._build_x265(package, for_builder=for_builder)
             elif package.build_system == "cmake":
@@ -396,7 +395,16 @@ endian = 'little'
         ]
         self._build_with_cmake(package=package, for_builder=for_builder)
 
-    def _extract(self, package: Package) -> None:
+    def extract(self, package: Package, for_builder: bool = False) -> None:
+        # ifthe package is already installed, do nothing
+        installed_dir = os.path.join(
+            self._prefix(for_builder=for_builder), "var", "lib", "cibuildpkg"
+        )
+        installed_file = os.path.join(installed_dir, package.name)
+        if os.path.exists(installed_file):
+            return
+
+
         assert package.source_strip_components in (
             0,
             1,

@@ -29,7 +29,9 @@ if not os.path.exists(output_tarball):
     builder = Builder(dest_dir=dest_dir)
     builder.create_directories()
 
+    all_packages = []
     available_tools = set()
+
     if plat == "Linux" and os.environ.get("CIBUILDWHEEL") == "1":
         with log_group("install packages"):
             run(
@@ -55,21 +57,19 @@ if not os.path.exists(output_tarball):
         run(["pip", "install", "cmake", "meson", "ninja"])
 
     if "gperf" not in available_tools:
-        builder.build(
+        all_packages.append(
             Package(
                 name="gperf",
                 source_url="http://ftp.gnu.org/pub/gnu/gperf/gperf-3.1.tar.gz",
             ),
-            for_builder=True,
         )
 
     if "nasm" not in available_tools:
-        builder.build(
+        all_packages.append(
             Package(
                 name="nasm",
                 source_url="https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2",
             ),
-            for_builder=True,
         )
 
     # build packages
@@ -326,19 +326,25 @@ if not os.path.exists(output_tarball):
 
     for package in package_groups:
         if package.name == "x264" and args.disable_gpl:
-            builder.build(openh264)
+            all_packages.append(openh264)
         elif not (package.gpl and args.disable_gpl):
-            builder.build(package)
+            all_packages.append(package)
             if package.fflags != "":
                 ffmpeg_build_args.append(package.fflags)
 
-    builder.build(
+    all_packages.append(
         Package(
             name="ffmpeg",
             source_url="https://ffmpeg.org/releases/ffmpeg-6.1.tar.xz",
             build_arguments=ffmpeg_build_args,
         )
     )
+
+    for package in all_packages:
+        builder.extract(package)
+
+    for package in all_packages:
+        builder.build(package, for_builder=package.name in ("nasm", "gperf"))
 
     if plat == "Windows":
         # fix .lib files being installed in the wrong directory
