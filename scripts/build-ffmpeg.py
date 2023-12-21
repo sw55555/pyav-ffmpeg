@@ -301,8 +301,8 @@ if not os.path.exists(output_tarball):
     openh264 = Package(
         name="openh264",
         requires=["meson", "nasm", "ninja"],
-        source_filename="openh264-2.2.0.tar.gz",
-        source_url="https://github.com/cisco/openh264/archive/refs/tags/v2.2.0.tar.gz",
+        source_filename="openh264-2.4.0.tar.gz",
+        source_url="https://github.com/cisco/openh264/archive/refs/tags/v2.4.0.tar.gz",
         build_system="meson",
     )
 
@@ -354,7 +354,7 @@ if not os.path.exists(output_tarball):
             "avfilter",
             "avformat",
             "avutil",
-            "postproc",
+            # "postproc",
             "swresample",
             "swscale",
         ):
