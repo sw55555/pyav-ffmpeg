@@ -237,7 +237,7 @@ if not os.path.exists(output_tarball):
         ),
         Package(
             name="opus",
-            source_url="https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz",
+            source_url="https://github.com/xiph/opus/releases/download/v1.4/opus-1.4.tar.gz",
             build_arguments=["--disable-doc", "--disable-extra-programs"],
             fflags="--enable-libopus",
         ),
@@ -319,13 +319,14 @@ if not os.path.exists(output_tarball):
         "--enable-version3",
     ]
 
-    if not args.disable_gpl:
-        ffmpeg_build_args.append("--enable-gpl")
+    if args.disable_gpl:
+        ffmpeg_build_args.extend(["--enable-libopenh264", "--disable-libx264"])
+    else:
+        ffmpeg_build_args.extend(["--disable-libopenh264", "--enable-gpl"])
 
     for package in package_groups:
         if package.name == "x264" and args.disable_gpl:
             builder.build(openh264)
-            ffmpeg_build_args.append("--enable-openh264")
         elif not (package.gpl and args.disable_gpl):
             builder.build(package)
             if package.fflags != "":
