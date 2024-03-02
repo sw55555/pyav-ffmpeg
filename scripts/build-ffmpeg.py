@@ -124,7 +124,7 @@ if not os.path.exists(output_tarball):
         Package(
             name="harfbuzz",
             requires=["freetype"],
-            source_url="https://github.com/harfbuzz/harfbuzz/releases/download/8.2.2/harfbuzz-8.2.2.tar.xz",
+            source_url="https://github.com/harfbuzz/harfbuzz/releases/download/4.1.0/harfbuzz-4.1.0.tar.xz",
             build_arguments=[
                 "--with-cairo=no",
                 "--with-chafa=no",
