@@ -117,23 +117,23 @@ if not os.path.exists(output_tarball):
             build_arguments=["--disable-nls", "--enable-libxml2"],
             fflags="--enable-fontconfig",
         ),
-        # Package(
-        #     name="fribidi",
-        #     source_url="https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz"
-        # ),
-        # Package(
-        #     name="harfbuzz",
-        #     requires=["freetype"],
-        #     source_url="https://github.com/harfbuzz/harfbuzz/releases/download/8.2.2/harfbuzz-8.2.2.tar.xz",
-        #     build_arguments=[
-        #         "--with-cairo=no",
-        #         "--with-chafa=no",
-        #         "--with-freetype=yes",
-        #         "--with-glib=no",
-        #     ],
-        #     # parallel build fails on Windows
-        #     build_parallel=plat != "Windows",
-        # ),
+        Package(
+            name="fribidi",
+            source_url="https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz"
+        ),
+        Package(
+            name="harfbuzz",
+            requires=["freetype"],
+            source_url="https://github.com/harfbuzz/harfbuzz/releases/download/8.2.2/harfbuzz-8.2.2.tar.xz",
+            build_arguments=[
+                "--with-cairo=no",
+                "--with-chafa=no",
+                "--with-freetype=yes",
+                "--with-glib=no",
+            ],
+            # parallel build fails on Windows
+            build_parallel=plat != "Windows",
+        ),
     ]
 
     if use_gnutls:
@@ -199,12 +199,12 @@ if not os.path.exists(output_tarball):
             build_arguments=["--disable-bdjava-jar"],
             fflags="--enable-libbluray",
         ),
-        # Package(
-        #     name="ass",
-        #     requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
-        #     source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
-        #     fflags="--enable-libass",
-        # ),
+        Package(
+            name="ass",
+            requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
+            source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
+            fflags="--enable-libass",
+        ),
         Package(
             name="dav1d",
             requires=["meson", "nasm", "ninja"],
