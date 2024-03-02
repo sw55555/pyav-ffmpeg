@@ -75,6 +75,21 @@ if not os.path.exists(output_tarball):
     # build packages
     package_groups = [
         Package(
+            name="png",
+            source_url="http://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng1.6_1.6.37.orig.tar.gz",
+            # avoid an assembler error on Windows
+            build_arguments=["PNG_COPTS=-fno-asynchronous-unwind-tables"],
+        ),
+        Package(
+            name="freetype",
+            requires=["png"],
+            source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz",
+            # At this point we have not built our own harfbuzz and we do NOT want to
+            # pick up the system's harfbuzz.
+            build_arguments=["--with-harfbuzz=no"],
+            fflags="--enable-libfreetype",
+        ),
+        Package(
             name="xz",
             source_url="https://github.com/tukaani-project/xz/releases/download/v5.6.0/xz-5.6.0.tar.xz",
             build_arguments=[
@@ -89,26 +104,11 @@ if not os.path.exists(output_tarball):
             ],
         ),
         Package(
-            name="png",
-            source_url="http://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng1.6_1.6.37.orig.tar.gz",
-            # avoid an assembler error on Windows
-            build_arguments=["PNG_COPTS=-fno-asynchronous-unwind-tables"],
-        ),
-        Package(
             name="xml2",
             requires=["xz"],
             source_url="https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.13.tar.xz",
             build_arguments=["--without-python"],
             fflags="--enable-libxml2",
-        ),
-        Package(
-            name="freetype",
-            requires=["png"],
-            source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.gz",
-            # At this point we have not built our own harfbuzz and we do NOT want to
-            # pick up the system's harfbuzz.
-            build_arguments=["--with-harfbuzz=no"],
-            fflags="--enable-libfreetype",
         ),
         Package(
             name="fontconfig",
