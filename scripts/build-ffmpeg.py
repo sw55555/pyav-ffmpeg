@@ -104,7 +104,7 @@ if not os.path.exists(output_tarball):
         Package(
             name="freetype",
             requires=["png"],
-            source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.12.1.tar.gz",
+            source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.gz",
             # At this point we have not built our own harfbuzz and we do NOT want to
             # pick up the system's harfbuzz.
             build_arguments=["--with-harfbuzz=no"],
@@ -334,7 +334,7 @@ if not os.path.exists(output_tarball):
     all_packages.append(
         Package(
             name="ffmpeg",
-            source_url="https://ffmpeg.org/releases/ffmpeg-6.1.tar.xz",
+            source_url="https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.xz",
             build_arguments=ffmpeg_build_args,
         )
     )
