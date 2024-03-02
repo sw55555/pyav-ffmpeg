@@ -94,30 +94,29 @@ if not os.path.exists(output_tarball):
             # avoid an assembler error on Windows
             build_arguments=["PNG_COPTS=-fno-asynchronous-unwind-tables"],
         ),
-        # Package(
-        #     name="xml2",
-        #     requires=["xz"],
-        #     source_url="https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.13.tar.xz",
-        #     build_arguments=["--without-python"],
-        #     fflags="--enable-libxml2",
-        # ),
-        # Package(
-        #     # Can't be built with arm64 macos
-        #     name="freetype",
-        #     requires=["png"],
-        #     source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.12.1.tar.gz",
-        #     # At this point we have not built our own harfbuzz and we do NOT want to
-        #     # pick up the system's harfbuzz.
-        #     build_arguments=["--with-harfbuzz=no"],
-        #     fflags="--enable-libfreetype",
-        # ),
-        # Package(
-        #     name="fontconfig",
-        #     requires=["freetype", "xml2"],
-        #     source_url="https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.xz",
-        #     build_arguments=["--disable-nls", "--enable-libxml2"],
-        #     fflags="--enable-fontconfig",
-        # ),
+        Package(
+            name="xml2",
+            requires=["xz"],
+            source_url="https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.13.tar.xz",
+            build_arguments=["--without-python"],
+            fflags="--enable-libxml2",
+        ),
+        Package(
+            name="freetype",
+            requires=["png"],
+            source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.12.1.tar.gz",
+            # At this point we have not built our own harfbuzz and we do NOT want to
+            # pick up the system's harfbuzz.
+            build_arguments=["--with-harfbuzz=no"],
+            fflags="--enable-libfreetype",
+        ),
+        Package(
+            name="fontconfig",
+            requires=["freetype", "xml2"],
+            source_url="https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.xz",
+            build_arguments=["--disable-nls", "--enable-libxml2"],
+            fflags="--enable-fontconfig",
+        ),
         # Package(
         #     name="fribidi",
         #     source_url="https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz"
@@ -193,13 +192,13 @@ if not os.path.exists(output_tarball):
             build_parallel=False,
             fflags="--enable-libaom",
         ),
-        # Package(
-        #     name="bluray",
-        #     requires=["fontconfig"],
-        #     source_url="https://download.videolan.org/pub/videolan/libbluray/1.3.4/libbluray-1.3.4.tar.bz2",
-        #     build_arguments=["--disable-bdjava-jar"],
-        #     fflags="--enable-libbluray",
-        # ),
+        Package(
+            name="bluray",
+            requires=["fontconfig"],
+            source_url="https://download.videolan.org/pub/videolan/libbluray/1.3.4/libbluray-1.3.4.tar.bz2",
+            build_arguments=["--disable-bdjava-jar"],
+            fflags="--enable-libbluray",
+        ),
         # Package(
         #     name="ass",
         #     requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
