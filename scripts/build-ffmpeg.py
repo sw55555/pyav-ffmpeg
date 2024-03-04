@@ -208,7 +208,7 @@ if not os.path.exists(output_tarball):
         Package(
             name="dav1d",
             requires=["meson", "nasm", "ninja"],
-            source_url="https://code.videolan.org/videolan/dav1d/-/archive/0.9.2/dav1d-0.9.2.tar.bz2",
+            source_url="https://code.videolan.org/videolan/dav1d/-/archive/1.4.0/dav1d-1.4.0.tar.bz2",
             build_system="meson",
             fflags="--enable-libdav1d",
         ),
@@ -229,8 +229,8 @@ if not os.path.exists(output_tarball):
         Package(
             name="openjpeg",
             requires=["cmake"],
-            source_filename="openjpeg-2.4.0.tar.gz",
-            source_url="https://github.com/uclouvain/openjpeg/archive/v2.4.0.tar.gz",
+            source_filename="openjpeg-2.5.2.tar.gz",
+            source_url="https://github.com/uclouvain/openjpeg/archive/v2.5.2.tar.gz",
             build_system="cmake",
             fflags="--enable-libopenjpeg",
         ),
@@ -260,8 +260,8 @@ if not os.path.exists(output_tarball):
         ),
         Package(
             name="vpx",
-            source_filename="vpx-1.13.1.tar.gz",
-            source_url="https://github.com/webmproject/libvpx/archive/v1.13.1.tar.gz",
+            source_filename="vpx-1.14.0.tar.gz",
+            source_url="https://github.com/webmproject/libvpx/archive/v1.14.0.tar.gz",
             build_arguments=[
                 "--disable-examples",
                 "--disable-tools",
