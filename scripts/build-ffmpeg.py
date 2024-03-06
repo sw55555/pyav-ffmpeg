@@ -297,13 +297,13 @@ if not os.path.exists(output_tarball):
         # ),
     ]
 
-    openh264 = Package(
-        name="openh264",
-        requires=["meson", "nasm", "ninja"],
-        source_filename="openh264-2.4.1.tar.gz",
-        source_url="https://github.com/cisco/openh264/archive/refs/tags/v2.4.1.tar.gz",
-        build_system="meson",
-    )
+    # openh264 = Package(
+    #     name="openh264",
+    #     requires=["meson", "nasm", "ninja"],
+    #     source_filename="openh264-2.4.1.tar.gz",
+    #     source_url="https://github.com/cisco/openh264/archive/refs/tags/v2.4.1.tar.gz",
+    #     build_system="meson",
+    # )
 
     ffmpeg_build_args = [
         "--disable-alsa",
@@ -316,6 +316,23 @@ if not os.path.exists(output_tarball):
         "--enable-lzma",
         "--enable-zlib",
         "--enable-version3",
+        "--enable-nonfree",
+        "--disable-programs",
+        "--enable-hardcoded-tables",
+        "--disable-decoders",
+        "--enable-decoder=h264,hevc,mpeg4,png,mjpeg,image2",
+        "--disable-encoders",
+        "--enable-encoder=libx264,png,mjpeg,image2",
+        "--disable-demuxers",
+        "--enable-demuxer=h264,hevc,mov,image2",
+        "--disable-muxers",
+        "--enable-muxer=h264,mov,mp4,image2",
+        "--disable-hwaccels",
+        "--disable-indevs",
+        "--disable-outdevs",
+        "--disable-devices",
+        "--enable-libx264",
+        "--enable-openssl",
     ]
 
     if args.disable_gpl:
@@ -325,7 +342,8 @@ if not os.path.exists(output_tarball):
 
     for package in package_groups:
         if package.name == "x264" and args.disable_gpl:
-            all_packages.append(openh264)
+            # all_packages.append(openh264)
+            pass
         elif not (package.gpl and args.disable_gpl):
             all_packages.append(package)
             if package.fflags != "":
