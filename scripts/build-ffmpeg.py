@@ -332,7 +332,7 @@ if not os.path.exists(output_tarball):
         "--disable-outdevs",
         "--disable-devices",
         "--enable-libx264",
-        "--disable-openssl" if plat == "Linux" else "--enable-openssl",
+        # "--disable-openssl" if plat == "Linux" else "--enable-openssl",
     ]
 
     if args.disable_gpl:
