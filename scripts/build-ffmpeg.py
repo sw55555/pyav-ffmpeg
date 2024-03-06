@@ -80,15 +80,15 @@ if not os.path.exists(output_tarball):
             # avoid an assembler error on Windows
             build_arguments=["PNG_COPTS=-fno-asynchronous-unwind-tables"],
         ),
-        Package(
-            name="freetype",
-            requires=["png"],
-            source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz",
-            # At this point we have not built our own harfbuzz and we do NOT want to
-            # pick up the system's harfbuzz.
-            build_arguments=["--with-harfbuzz=no"],
-            fflags="--enable-libfreetype",
-        ),
+        # Package(
+        #     name="freetype",
+        #     requires=["png"],
+        #     source_url="https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz",
+        #     # At this point we have not built our own harfbuzz and we do NOT want to
+        #     # pick up the system's harfbuzz.
+        #     build_arguments=["--with-harfbuzz=no"],
+        #     fflags="--enable-libfreetype",
+        # ),
         Package(
             name="xz",
             source_url="https://github.com/tukaani-project/xz/releases/download/v5.6.0/xz-5.6.0.tar.xz",
@@ -103,37 +103,37 @@ if not os.path.exists(output_tarball):
                 "--disable-xzdec",
             ],
         ),
-        Package(
-            name="xml2",
-            requires=["xz"],
-            source_url="https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.13.tar.xz",
-            build_arguments=["--without-python"],
-            fflags="--enable-libxml2",
-        ),
-        Package(
-            name="fontconfig",
-            requires=["freetype", "xml2"],
-            source_url="https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.xz",
-            build_arguments=["--disable-nls", "--enable-libxml2"],
-            fflags="--enable-fontconfig",
-        ),
-        Package(
-            name="fribidi",
-            source_url="https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz"
-        ),
-        Package(
-            name="harfbuzz",
-            requires=["freetype"],
-            source_url="https://github.com/harfbuzz/harfbuzz/releases/download/4.1.0/harfbuzz-4.1.0.tar.xz",
-            build_arguments=[
-                "--with-cairo=no",
-                "--with-chafa=no",
-                "--with-freetype=yes",
-                "--with-glib=no",
-            ],
-            # parallel build fails on Windows
-            build_parallel=plat != "Windows",
-        ),
+        # Package(
+        #     name="xml2",
+        #     requires=["xz"],
+        #     source_url="https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.13.tar.xz",
+        #     build_arguments=["--without-python"],
+        #     fflags="--enable-libxml2",
+        # ),
+        # Package(
+        #     name="fontconfig",
+        #     requires=["freetype", "xml2"],
+        #     source_url="https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.xz",
+        #     build_arguments=["--disable-nls", "--enable-libxml2"],
+        #     fflags="--enable-fontconfig",
+        # ),
+        # Package(
+        #     name="fribidi",
+        #     source_url="https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz"
+        # ),
+        # Package(
+        #     name="harfbuzz",
+        #     requires=["freetype"],
+        #     source_url="https://github.com/harfbuzz/harfbuzz/releases/download/4.1.0/harfbuzz-4.1.0.tar.xz",
+        #     build_arguments=[
+        #         "--with-cairo=no",
+        #         "--with-chafa=no",
+        #         "--with-freetype=yes",
+        #         "--with-glib=no",
+        #     ],
+        #     # parallel build fails on Windows
+        #     build_parallel=plat != "Windows",
+        # ),
     ]
 
     if use_gnutls:
@@ -177,55 +177,55 @@ if not os.path.exists(output_tarball):
 
     package_groups += [
         # codecs
-        Package(
-            name="aom",
-            requires=["cmake"],
-            source_url="https://storage.googleapis.com/aom-releases/libaom-3.2.0.tar.gz",
-            source_strip_components=0,
-            build_system="cmake",
-            build_arguments=[
-                "-DENABLE_DOCS=0",
-                "-DENABLE_EXAMPLES=0",
-                "-DENABLE_TESTS=0",
-                "-DENABLE_TOOLS=0",
-            ],
-            build_parallel=False,
-            fflags="--enable-libaom",
-        ),
-        Package(
-            name="bluray",
-            requires=["fontconfig"],
-            source_url="https://download.videolan.org/pub/videolan/libbluray/1.3.4/libbluray-1.3.4.tar.bz2",
-            build_arguments=["--disable-bdjava-jar"],
-            fflags="--enable-libbluray",
-        ),
-        Package(
-            name="ass",
-            requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
-            source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
-            fflags="--enable-libass",
-        ),
-        Package(
-            name="dav1d",
-            requires=["meson", "nasm", "ninja"],
-            source_url="https://code.videolan.org/videolan/dav1d/-/archive/1.4.0/dav1d-1.4.0.tar.bz2",
-            build_system="meson",
-            fflags="--enable-libdav1d",
-        ),
+        # Package(
+        #     name="aom",
+        #     requires=["cmake"],
+        #     source_url="https://storage.googleapis.com/aom-releases/libaom-3.2.0.tar.gz",
+        #     source_strip_components=0,
+        #     build_system="cmake",
+        #     build_arguments=[
+        #         "-DENABLE_DOCS=0",
+        #         "-DENABLE_EXAMPLES=0",
+        #         "-DENABLE_TESTS=0",
+        #         "-DENABLE_TOOLS=0",
+        #     ],
+        #     build_parallel=False,
+        #     fflags="--enable-libaom",
+        # ),
+        # Package(
+        #     name="bluray",
+        #     requires=["fontconfig"],
+        #     source_url="https://download.videolan.org/pub/videolan/libbluray/1.3.4/libbluray-1.3.4.tar.bz2",
+        #     build_arguments=["--disable-bdjava-jar"],
+        #     fflags="--enable-libbluray",
+        # ),
+        # Package(
+        #     name="ass",
+        #     requires=["fontconfig", "freetype", "fribidi", "harfbuzz", "nasm", "png"],
+        #     source_url="https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.gz",
+        #     fflags="--enable-libass",
+        # ),
+        # Package(
+        #     name="dav1d",
+        #     requires=["meson", "nasm", "ninja"],
+        #     source_url="https://code.videolan.org/videolan/dav1d/-/archive/1.4.0/dav1d-1.4.0.tar.bz2",
+        #     build_system="meson",
+        #     fflags="--enable-libdav1d",
+        # ),
         Package(
             name="lame",
             source_url="http://deb.debian.org/debian/pool/main/l/lame/lame_3.100.orig.tar.gz",
             fflags="--enable-libmp3lame",
         ),
-        Package(
-            name="ogg",
-            source_url="http://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz",
-        ),
-        Package(
-            name="opencore-amr",
-            source_url="http://deb.debian.org/debian/pool/main/o/opencore-amr/opencore-amr_0.1.5.orig.tar.gz",
-            build_parallel=plat != "Windows",
-        ),
+        # Package(
+        #     name="ogg",
+        #     source_url="http://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.gz",
+        # ),
+        # Package(
+        #     name="opencore-amr",
+        #     source_url="http://deb.debian.org/debian/pool/main/o/opencore-amr/opencore-amr_0.1.5.orig.tar.gz",
+        #     build_parallel=plat != "Windows",
+        # ),
         Package(
             name="openjpeg",
             requires=["cmake"],
@@ -234,41 +234,41 @@ if not os.path.exists(output_tarball):
             build_system="cmake",
             fflags="--enable-libopenjpeg",
         ),
-        Package(
-            name="opus",
-            source_url="https://github.com/xiph/opus/releases/download/v1.4/opus-1.4.tar.gz",
-            build_arguments=["--disable-doc", "--disable-extra-programs"],
-            fflags="--enable-libopus",
-        ),
-        Package(
-            name="speex",
-            source_url="http://downloads.xiph.org/releases/speex/speex-1.2.1.tar.gz",
-            build_arguments=["--disable-binaries"],
-            fflags="--enable-libspeex",
-        ),
-        Package(
-            name="twolame",
-            source_url="http://deb.debian.org/debian/pool/main/t/twolame/twolame_0.4.0.orig.tar.gz",
-            build_arguments=["--disable-sndfile"],
-            fflags="--enable-libtwolame",
-        ),
-        Package(
-            name="vorbis",
-            requires=["ogg"],
-            source_url="http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz",
-            fflags="--enable-libvorbis",
-        ),
-        Package(
-            name="vpx",
-            source_filename="vpx-1.14.0.tar.gz",
-            source_url="https://github.com/webmproject/libvpx/archive/v1.14.0.tar.gz",
-            build_arguments=[
-                "--disable-examples",
-                "--disable-tools",
-                "--disable-unit-tests",
-            ],
-            fflags="--enable-libvpx",
-        ),
+        # Package(
+        #     name="opus",
+        #     source_url="https://github.com/xiph/opus/releases/download/v1.4/opus-1.4.tar.gz",
+        #     build_arguments=["--disable-doc", "--disable-extra-programs"],
+        #     fflags="--enable-libopus",
+        # ),
+        # Package(
+        #     name="speex",
+        #     source_url="http://downloads.xiph.org/releases/speex/speex-1.2.1.tar.gz",
+        #     build_arguments=["--disable-binaries"],
+        #     fflags="--enable-libspeex",
+        # ),
+        # Package(
+        #     name="twolame",
+        #     source_url="http://deb.debian.org/debian/pool/main/t/twolame/twolame_0.4.0.orig.tar.gz",
+        #     build_arguments=["--disable-sndfile"],
+        #     fflags="--enable-libtwolame",
+        # ),
+        # Package(
+        #     name="vorbis",
+        #     requires=["ogg"],
+        #     source_url="http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.gz",
+        #     fflags="--enable-libvorbis",
+        # ),
+        # Package(
+        #     name="vpx",
+        #     source_filename="vpx-1.14.0.tar.gz",
+        #     source_url="https://github.com/webmproject/libvpx/archive/v1.14.0.tar.gz",
+        #     build_arguments=[
+        #         "--disable-examples",
+        #         "--disable-tools",
+        #         "--disable-unit-tests",
+        #     ],
+        #     fflags="--enable-libvpx",
+        # ),
         Package(
             name="x264",
             source_url="https://code.videolan.org/videolan/x264/-/archive/master/x264-master.tar.bz2",
@@ -277,24 +277,24 @@ if not os.path.exists(output_tarball):
             fflags="--enable-libx264",
             gpl=True,
         ),
-        Package(
-            name="x265",
-            requires=["cmake"],
-            source_url="https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.5.tar.gz",
-            build_system="cmake",
-            source_dir="source",
-            fflags="--enable-libx265",
-            gpl=True,
-        ),
-        Package(
-            name="xvid",
-            requires=["nasm"],
-            source_url="https://downloads.xvid.com/downloads/xvidcore-1.3.7.tar.gz",
-            source_dir="build/generic",
-            build_dir="build/generic",
-            fflags="--enable-libxvid",
-            gpl=True,
-        ),
+        # Package(
+        #     name="x265",
+        #     requires=["cmake"],
+        #     source_url="https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.5.tar.gz",
+        #     build_system="cmake",
+        #     source_dir="source",
+        #     fflags="--enable-libx265",
+        #     gpl=True,
+        # ),
+        # Package(
+        #     name="xvid",
+        #     requires=["nasm"],
+        #     source_url="https://downloads.xvid.com/downloads/xvidcore-1.3.7.tar.gz",
+        #     source_dir="build/generic",
+        #     build_dir="build/generic",
+        #     fflags="--enable-libxvid",
+        #     gpl=True,
+        # ),
     ]
 
     openh264 = Package(
